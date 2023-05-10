@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+{% block css_links %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login_signup.css') }}" />
+{% endblock %}
+
+
+
+
+
+{% block body_block %}
+<main>
+  <div class="box">
+    <div class="inner-box">
+      <div class="forms-wrap">
+        <form autocomplete="off" id="signin-form" class="sign-in-form">
+          <div class="logo">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="easyclass" />
+
+          </div>
+
+          <div class="heading">
+            <h2>Welcome Back</h2>
+            <h6>Not registred yet?</h6>
+            <a href="#" class="toggle">Sign up</a>
+          </div>
+
+          <div class="actual-form">
+            <div class="input-wrap">
+              <input name="username_" id="username_" type="text" minlength="4" class="input-field" autocomplete="off"
+                required />
+              <label>Email Address</label>
+            </div>
+
+            <div class="input-wrap">
+              <input name="password_" id="password_" type="password" minlength="8" class="input-field"
+                autocomplete="off" required />
+              <label>Password</label>
+            </div>
+
+            <input type="submit" value="Sign In" class="sign-btn" />
+
+            <p class="text">
+              Forgotten your password or you login datails?
+              <a href="#">Get help</a> signing in
+            </p>
+          </div>
+        </form>
+
+        <form autocomplete="off" id="signup-fom" class="sign-up-form">
+          <div class="logo">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Mango Surveyor" />
+
+          </div>
+
+          <div class="heading">
+            <h2>Get Started</h2>
+            <h6>Already have an account?</h6>
+            <a href="#" class="toggle">Sign In</a>
+          </div>
+
+          <div class="actual-form">
+            <div class="input-wrap">
+              <input id="username" name="username" type="text" minlength="4" class="input-field" autocomplete="off"
+                required />
+              <label>Name</label>
+            </div>
+
+            <div class="input-wrap">
+              <input id="email" name="email" type="email" class="input-field" autocomplete="off" required />
+              <label>Email</label>
+            </div>
+
+            <div class="input-wrap">
+              <input id="_password" name="_password" type="password" minlength="4" class="input-field"
+                autocomplete="off" required />
+              <label>Password</label>
+            </div>
+
+            <input type="submit" value="Sign Up" class="sign-btn" />
+
+            <p class="text">
+              By signing up, I agree to the
+              <a href="#">Terms of Services</a> and
+              <a href="#">Privacy Policy</a>
+            </p>
+          </div>
+        </form>
+      </div>
+
+      <div class="carousel">
+        <div class="images-wrapper">
+          <img src="{{ url_for('static', filename='img/tree.png') }}" class="image img-1 show" alt=""
+            height="400px" />
+          <img src="{{ url_for('static', filename='img/tree1.png') }}" class="image img-2" alt="" height="400px" />
+          <img src="{{ url_for('static', filename='img/tree2.png') }}" class="image img-3" alt="" height="400px" />
+        </div>
+
+        <div class="text-slider">
+          <div class="text-wrap">
+            <div class="text-group">
+              <h2>"Mango health made easy with our detection system"</h2>
+              <h2>"Mango disease diagnosis at your fingertips"</h2>
+              <h2>"Maximize mango yield using advanced detection"</h2>
+            </div>
+          </div>
+
+          <div class="bullets">
+            <span id="one" class="active" data-value="1"></span>
+            <span id="two" data-value="2"></span>
+            <span id="three" data-value="3"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- Javascript file -->
+<!-- <script src="./scripts/auth.js"></script> -->
+<script src="{{ url_for('static', filename='js/login_signup.js') }}"></script>
+<!-- Compiled and minified JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+<script type="text/javascript">
+  jQuery_3_6_1(document).on('submit', '#signup-fom', function (e) {
+    M.toast({ html: `Please Wait`, classes: 'green rounded' });
+    e.preventDefault();
+    jQuery_3_6_1.ajax({
+      type: 'post',
+      url: '/login',
+      data: {
+        typee: "signup",
+        email: jQuery_3_6_1("#email").val(),
+        _password: jQuery_3_6_1("#_password").val(),
+        username: jQuery_3_6_1("#username").val(),
+      },
+      success: function () {
+        M.Toast.dismissAll();
+        jQuery_3_6_1("#email").val("");
+        jQuery_3_6_1("#_password").val("");
+        jQuery_3_6_1("#username").val("");
+        M.toast({ html: "Succesfully Signed Up, Lets Sign In!!", classes: 'green rounded' });
+        jQuery_3_6_1("main").removeClass("sign-up-mode");
+      },
+      error: function(XMLHttpRequest, textStatus, errorThrown) { 
+        M.Toast.dismissAll();
+        M.toast({ html: `Email Already Exist !!`, classes: 'red rounded' });
+        jQuery_3_6_1("#email").val("");
+        jQuery_3_6_1("#_password").val("");
+        jQuery_3_6_1("#username").val("");
+      }  
+    })
+  });
+
+
+
+  jQuery_3_6_1(document).on('submit', '#signin-form', function (e) {
+    
+    e.preventDefault();
+    jQuery_3_6_1.ajax({
+      type: 'post',
+      url: '/login',
+      data: {
+        typee: "signin",
+        username_: jQuery_3_6_1("#username_").val(),
+        password_: jQuery_3_6_1("#password_").val(),
+
+      },
+      success: function (response) {
+        // alert(response)
+        M.toast({ html: `Welcome ${response}`, classes: 'green rounded' });
+        jQuery_3_6_1("#username_").val("");
+        jQuery_3_6_1("#password_").val("");
+        var delayInMilliseconds = 1000; //1 second
+        setTimeout(function () {
+          window.location.href = 'dashboard';
+        }, delayInMilliseconds);
+
+      },
+      error: function(XMLHttpRequest, textStatus, errorThrown) { 
+        M.toast({ html: `Email or Password is Incorrect!!`, classes: 'red rounded' });
+        jQuery_3_6_1("#email").val("");
+        jQuery_3_6_1("#_password").val("");
+        jQuery_3_6_1("#username").val("");
+      }  
+    })
+  });
+
+</script>
+{% endblock %}
+ 
+ 

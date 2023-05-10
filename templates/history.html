@@ -1,0 +1,468 @@
+{% extends 'base1.html' %}
+{% block css_links %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/sb-admin-2.css') }}" rel="stylesheet" />
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.6/jspdf.plugin.autotable.min.js"></script>
+<!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/toastet.css') }}"> -->
+
+
+<style>
+    .menu_::-webkit-scrollbar {
+        width: 7px;
+    }
+
+    /* Track */
+    .menu_::-webkit-scrollbar-track {
+        border-radius: 100vh;
+        background: #323741;
+    }
+
+    .menu_::-webkit-scrollbar-thumb {
+        background: linear-gradient(90deg, rgba(255, 237, 89, 1) 20%, rgba(120, 236, 108, 1) 86%);
+        border-radius: 15px;
+        width: thin;
+    }
+</style>
+
+{% endblock %}
+{% block body_block %}
+<h1 class="title">History</h1>
+<ul class="breadcrumbs">
+    <li><a href="#">Home</a></li>
+    <li class="divider">/</li>
+    <li><a href="#" class="active">History</a></li>
+</ul>
+<h1 id="useer" style="display: none;">{{session['user']}}</h1>
+<!-- <h1 id="speice_list" style="display: none;">{{session['species_list']}}</h1> -->
+<h1 id="farms_list" style="display: none;">{{session['farm_keys']}}</h1>
+<h1 id="role" style="display: none;">{{session['role']}}</h1>
+<h1 id="my_farms" style="display: none;">{{session['farm']}}</h1>
+<div style=" display: inline-block; margin-right: 25px;  width: 100%;">
+    <span style="display: inline-block ">
+        <div class="dropdown_">
+            <div class="select_" style="width:270px;">
+                <span name="" id="title_farm" class="selected_">--Select Farm/Orchid--</span>
+                <div class="caret_"></div>
+            </div>
+            <ul id="farms_ul" class="menu_" style="left: 2%; width: 270px;height:200px;overflow-y: scroll;transform: none; scrollbar-color:  rgba(255,237,89,1)  #f1f0f6;
+        scrollbar-width: thin;  text-align: left;">
+
+            </ul>
+        </div>
+
+    </span>
+    <span style="display: inline-block ">
+        <div class="dropdown_">
+            <div class="select_" style="width:270px;">
+                <span name="" id="title_report" class="selected_">--Select Report--</span>
+                <div class="caret_"></div>
+            </div>
+            <ul id="reports_ul" class="menu_" style="left: 23%; width: 270px;height:200px;overflow-y: scroll;transform: none; scrollbar-color:  rgba(255,237,89,1)  #f1f0f6;
+        scrollbar-width: thin;  text-align: left;">
+
+            </ul>
+        </div>
+    </span>
+
+    <div id="reports_drop" class="dropdown_" style="display: inline-block;visibility: hidden;width: 260px;">
+        <div class="select_" style="width: 260px;">
+            <span id="reports_name" class="selected_">--Select Report--</span>
+            <div class="caret_"></div>
+        </div>
+        <ul id="reports" class="menu_" style="left: 20%;width:260px;height:100px;overflow-y: scroll;transform: none; scrollbar-color:  rgba(255,237,89,1)  #f1f0f6;
+                scrollbar-width: thin;  text-align: left;">
+
+        </ul>
+    </div>
+    <button class="btn-send" style="width: 280px;height: 55px;visibility: hidden;">Generate PDF</button>
+    <button id="pdf" class="btn-send"
+        style="width: 180px;height: 55px;visibility: hidden;margin-right: 10px;margin-top: 10px;"
+        onclick="createPDF(jQuery_3_6_1('#reports_name').text())">Generate PDF</button>
+    <button id="csv" class="btn-send" style="width: 180px;height: 55px;visibility: hidden;margin-top: 10px;"
+        onclick="htmlToCSV()">Create CSV</button>
+</div>
+<br><br>
+<div id="table-main" class="container-fluid" style="visibility: hidden;">
+
+    <h3 id="created_name"></h3>
+    
+    <h3 id="sp_name"></h3>
+    <div class="row">
+        <!-- Your Profile Views Chart -->
+        <div class="col-lg-12 m-b30">
+            <div class="widget-box">
+
+
+
+
+                <div class="card shadow mb-4">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr class="text-center">
+                                        <th style="color: black;">No.</th>
+                                        <th style="color: black;">Image Name</th>
+                                        <th style="color: black;">Disease Found</th>
+                                        <th style="color: black;">Predicted Disease</th>
+                                        <th style="color: black;">Predicted Percentage</th>
+                                        <th style="color: black;">Cure</th>
+
+                                    </tr>
+                                </thead>
+
+                                <tbody id="tabledata">
+                                    
+
+
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- Your Profile Views Chart END-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</main>
+</section>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+<script>
+    jQuery_3_6_1(document).ready(function () {
+        var farmsText = jQuery_3_6_1('#my_farms').text(); // Get the text of the h1 element
+        var farmsList = farmsText.split('@'); // Split the text with the @ character
+
+        // var farms_name_list = []
+        // Loop through the farms list and split each farm with the _ character
+        for (var i = 0; i < farmsList.length; i++) {
+            var farm = farmsList[i];
+            var farmParts = farm.split('_');
+            // console.log(farmParts); 
+            jQuery_3_6_1('#farms_ul').append(`<li name=${farmParts[0]}> ${farmParts[1]}</li>`);
+            // farms_name_list.push(farmParts[1])// Display the farm parts in the console
+        };
+        jQuery_3_6_1('#farms_ul li').each(function () {
+            jQuery_3_6_1(this).click(function () {
+
+                var itemText = jQuery_3_6_1(this).attr('name');
+
+                jQuery_3_6_1('#title_farm').attr('name', itemText);
+                jQuery_3_6_1('#title_farm').text(jQuery_3_6_1(this).text())
+                jQuery_3_6_1(".menu_").removeClass("menu-open");
+                jQuery_3_6_1.ajax({
+                    type: "POST",
+                    url: "/reports_get",
+                    data: {
+                        'farm_key': jQuery_3_6_1("#title_farm").attr('name')
+                    },
+                    success: function (response) {
+
+                        for (var i = 0; i < response.length; i++) {
+                            keyy = Object.keys(response[i])
+
+                            vall = Object.values(response[i])
+                            var abcd = vall[0].replace(/\s+/g, '_');
+
+                            console.log(abcd)
+                            name_for = keyy[0].split("@")
+                            namess = name_for[0] + "@" + name_for[1]
+                            document.getElementById("created_name").innerText = "Created by: " +name_for[1];
+                            document.getElementById("sp_name").innerText = "Specie: " +name_for[0];
+                            jQuery_3_6_1('#reports_ul').append(`<li value=${namess} name=${  abcd}> ${name_for[2]}</li>`);
+                            
+
+
+                        }
+                        jQuery_3_6_1('#reports_ul li').each(function () {
+                                jQuery_3_6_1(this).click(function () {
+                                    jQuery_3_6_1("#tabledata").empty();
+                                    // jQuery_3_6_1('#title_farm').attr('name', itemText);
+                                    jQuery_3_6_1('#title_report').text(jQuery_3_6_1(this).text());
+                                    jQuery_3_6_1(".menu_").removeClass("menu-open");
+                                    reportt = jQuery_3_6_1(this).attr("value").split("@");
+                                    
+                                    
+                                    document.getElementById("created_name").innerText = "Created by: " +reportt[1];
+                                    document.getElementById("sp_name").innerText = "Specie: " +reportt[0];
+                                    reportt_user = jQuery_3_6_1(this).attr("name").split("+")
+                                    for(var i = 0; i < reportt_user.length ; i++){
+                                        if(reportt_user[i].length > 2){
+                                            data_report = reportt_user[i].split("@")
+                                            console.log(data_report)
+                                            jQuery_3_6_1("#tabledata").append(`<tr  class="text-center">
+                                                   <td>${i + 1}</td>
+                                                    <td>${data_report[0]}</td>
+                                                    <td>yes</td>
+                                                    <td>${data_report[1]}</td>
+
+                                                     <td>${Math.round(data_report[2] * 100)}%</td>
+                                                     <td>${data_report[3]}</td>
+                                                 </tr>`)
+                                        }
+                                        
+                                    }document.getElementById("table-main").style.visibility = "visible";
+                                    document.getElementById("pdf").style.visibility = "visible";
+                                document.getElementById("csv").style.visibility = "visible";
+                                
+                                    
+
+                                    
+                                })
+                            });
+
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(textStatus, errorThrown);
+                    }
+                });
+            });
+        });
+        // const firebaseConfig = {
+        //     apiKey: "AIzaSyAfGNRYMBoJkc2lNpBvC2ZlZFtV6cqWTEI",
+        //     authDomain: "fyp-project-cs06.firebaseapp.com",
+        //     projectId: "fyp-project-cs06",
+        //     storageBucket: "fyp-project-cs06.appspot.com",
+        //     messagingSenderId: "463282028020",
+        //     appId: "1:463282028020:web:404b702857a860e1478da1"
+        // };
+
+
+        // const app = firebase.initializeApp(firebaseConfig);
+        // listof = localStorage.getItem("total_speices").split("_")
+        // for (i = 0; i < listof.length; i++) {
+
+        //     jQuery_3_6_1("#spe").append(`<li id=${listof[i]}>${listof[i]}</li>`);
+        //     jQuery_3_6_1(`#${listof[i]}`).click(function (event) {
+        //         var ttt = jQuery_3_6_1(event.target).text()
+        //         document.getElementById("titling").innerText = ttt;
+        //         document.getElementById("spe").classList.remove("menu-open");
+        //         M.toast({ html: `Please Wait!!`, classes: 'green rounded' });
+        //         var userid = localStorage.getItem("user_id");
+        //         // alert('users/' + userid+`/${ttt}`)
+        //         var starCountRef = firebase.database().ref('users/' + userid + `/${ttt}`);
+        //         starCountRef.get().then((snapshot) => {
+        //             if (snapshot.exists()) {
+        //                 jQuery_3_6_1('#reports li').remove();
+        //                 const data = snapshot.val();
+        //                 var keys = Object.keys(data);
+        //                 var valu = Object.values(data);
+        //                 var counter = 0;
+        //                 document.getElementById("reports_name").innerText = `--Select Report--`;
+        //                 document.getElementById("table-main").style.visibility = "hidden";
+        //                 for (var j = 0; j < keys.length; j++) {
+        //                     // alert("hello i am here"+j)
+        //                     var abc = keys[j].split("_");
+        //                     var bcd = abc[1].split("-");
+        //                     var cde = bcd.join(":");
+        //                     var deff = abc[0] + "-" + cde
+
+        //                     jQuery_3_6_1("#reports").append(`<li id=${keys[j]}>${abc[0]} ${cde}</li>`);
+        //                     jQuery_3_6_1(`#${keys[j]}`).click(function (event) {
+        //                         jQuery_3_6_1('#tabledata tr').remove();
+        //                         var table_li = data[jQuery_3_6_1(this).attr("id")].split("+")
+        //                         for (var k = 0; k < table_li.length; k++) {
+        //                             var insider = table_li[k].split("@")
+        //                             if (table_li[k] == "") {
+        //                                 continue;
+        //                             }
+        //                             if (insider[1] == "normal") {
+        //                                 jQuery_3_6_1("#tabledata").append(`<tr  class="text-center">
+        //                                             <td>${k + 1}</td>
+        //                                             <td>${insider[0]}</td>
+        //                                             <td>no</td>
+        //                                             <td>${insider[1]}</td>
+
+        //                                             <td>${Math.round(insider[2] * 100)}%</td>
+        //                                             <td>${insider[3]}</td>
+        //                                         </tr>`)
+        //                             }
+        //                             else {
+        //                                 jQuery_3_6_1("#tabledata").append(`<tr  class="text-center">
+        //                                             <td>${k + 1}</td>
+        //                                             <td>${insider[0]}</td>
+        //                                             <td>yes</td>
+        //                                             <td>${insider[1]}</td>
+        //                                             <td>${Math.round(insider[2] * 100)}%</td>
+        //                                             <td>${insider[3]}</td>
+        //                                         </tr>`)
+        //                             }
+
+
+        //                         }
+
+        //                         jQuery_3_6_1("#reports_name").text(jQuery_3_6_1(this).text())
+        //                         document.getElementById("reports").classList.remove("menu-open");
+        //                         document.getElementById("table-main").style.visibility = "visible";
+        //                         document.getElementById("pdf").style.visibility = "visible";
+        //                         document.getElementById("csv").style.visibility = "visible";
+
+
+        //                     })
+
+
+        //                 }
+        //                 document.getElementById("reports_drop").style.visibility = "visible";
+        //                 M.Toast.dismissAll();
+        //                 // console.log(data);
+        //             }
+        //             else {
+        //                 M.Toast.dismissAll();
+        // M.toast({ html: `No Records Found!!`, classes: 'orange rounded' });
+        // alert("No Reports Available")
+        // }
+        // })
+        // document.getElementById("overiew").innerText = `Overview of Mango-${ttt}`;
+        // document.getElementById("cont").style.visibility = "initial";
+
+        // });
+        // }
+        // const firebaseConfig = {
+        //             apiKey: "AIzaSyAfGNRYMBoJkc2lNpBvC2ZlZFtV6cqWTEI",
+        //             authDomain: "fyp-project-cs06.firebaseapp.com",
+        //             projectId: "fyp-project-cs06",
+        //             storageBucket: "fyp-project-cs06.appspot.com",
+        //             messagingSenderId: "463282028020",
+        //             appId: "1:463282028020:web:404b702857a860e1478da1"
+        //         };
+
+
+        //         const app = firebase.initializeApp(firebaseConfig);
+
+        // document.getElementById("usename").innerHTML = localStorage.getItem("username")
+
+    })
+</script>
+<script>
+    jQuery_3_6_1("#user_role").text(jQuery_3_6_1("#user_role").text() + " (" + jQuery_3_6_1('#role').text().trim() + ")");
+
+    function createPDF(name) {
+        M.Toast.dismissAll();
+        M.toast({ html: `Please Wait!!`, classes: 'green rounded' });
+        var doc = new jsPDF('p', 'pt', 'letter');
+        var htmlstring = '';
+        var tempVarToCheckPageHeight = 0;
+        var pageHeight = 0;
+        pageHeight = doc.internal.pageSize.height;
+        specialElementHandlers = {
+            // element with id of "bypass" - jQuery style selector  
+            '#bypassme': function (element, renderer) {
+                // true = "handled elsewhere, bypass text extraction"  
+                return true
+            }
+        };
+        margins = {
+            top: 150,
+            bottom: 60,
+            left: 40,
+            right: 40,
+            width: 50
+        };
+        var y = 20;
+        doc.setLineWidth(2);
+        doc.text(200, y = y + 70, "List of All Students");
+        doc.autoTable({
+            html: '#dataTable',
+            startY: 70,
+            theme: 'grid',
+            columnStyles: {
+                //0: {
+                //    cellWidth: 45,
+                //},
+                //1: {
+                //    cellWidth: 45,
+                //},
+                //2: {
+                //    cellWidth: 45,
+                //},
+                //3: {
+                //    cellWidth: 45,
+                ////}
+            },
+            styles: {
+                minCellHeight: 40
+            }
+        })
+        doc.save(name + " CSV Report");
+    }
+
+    function htmlToCSV(html, filename) {
+        M.Toast.dismissAll();
+        M.toast({ html: `Please Wait!!`, classes: 'green rounded' });
+        var data = [];
+        var get_rows = document.querySelectorAll("table tr");
+
+        for (var i = 0; i < get_rows.length; i++) {
+            var rows = [];
+            var cols = get_rows[i].querySelectorAll("td, th");
+
+            for (var j = 0; j < cols.length; j++) {
+                rows.push(cols[j].innerText);
+            }
+
+            data.push(rows.join(","));
+        }
+
+        downloadCSVFile(data.join("\n"), filename);
+    }
+    function downloadCSVFile(csv, filename) {
+        var csv_file, download_link;
+
+        csv_file = new Blob([csv], { type: "text/csv" });
+
+        download_link = document.createElement("a");
+
+        download_link.download = jQuery_3_6_1("#reports_name").text() + " CSV Report";
+
+        download_link.href = window.URL.createObjectURL(csv_file);
+
+        download_link.style.display = "none";
+
+        document.body.appendChild(download_link);
+
+        download_link.click();
+    }
+    const dropdowns_ = document.querySelectorAll(".dropdown_");
+    dropdowns_.forEach(dropdown => {
+        const selct = dropdown.querySelector(".select_");
+        const caret = dropdown.querySelector(".caret_");
+        const menu = dropdown.querySelector(".menu_");
+        const options = dropdown.querySelectorAll(".menu_ li");
+        const selected = dropdown.querySelector(".selected_")
+
+
+        selct.addEventListener("click", () => {
+            selct.classList.toggle("select-clicked");
+            caret.classList.toggle("caret_rotate");
+            menu.classList.toggle("menu-open");
+        });
+
+        options.forEach(option => {
+            option.addEventListener("click", () => {
+                selected.innerText = option.innerText;
+                selected.classList.remove("select-clicked");
+                caret.classList.remove("caret_rotate");
+                menu.classList.remove("menu-open");
+                options.forEach(option => {
+                    option.classList.remove("active_");
+
+                });
+                option.classList.add("active_")
+            })
+        })
+
+
+    })
+
+
+
+
+
+</script>
+<!-- <script src="{{ url_for('static', filename='js/dropdown_.js') }}"></script> -->
+{% endblock %}
+
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script> -->

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mango Surveyor</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/logo1.png') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/toastet.css') }}">
+
+    <script type="text/javascript">
+        var jQuery_3_6_1 = $.noConflict(true);
+    </script>
+    {% block css_links %}
+
+    {% endblock %}
+
+</head>
+
+<body>
+    {% block body_block %}
+
+    {% endblock %}
+
+</body>
+
+</html>

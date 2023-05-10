@@ -1,0 +1,296 @@
+{% extends 'base1.html' %}
+{% block css_links %}
+
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/sb-admin-2.css') }}" rel="stylesheet" />
+<link rel="stylesheet" href="{{ url_for('static', filename='css/upload-image.css') }}" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.6/jspdf.plugin.autotable.min.js"></script>
+
+
+
+<style>
+    .menu_::-webkit-scrollbar {
+        width: 7px;
+    }
+
+    /* Track */
+    .menu_::-webkit-scrollbar-track {
+        border-radius: 100vh;
+        background: #323741;
+    }
+
+    .menu_::-webkit-scrollbar-thumb {
+        background: linear-gradient(90deg, rgba(255, 237, 89, 1) 20%, rgba(120, 236, 108, 1) 86%);
+        border-radius: 15px;
+        width: thin;
+    }
+</style>
+</head>
+{% endblock %}
+
+
+{% block body_block %}
+<h1 class="title">Make Prediction</h1>
+<ul class="breadcrumbs">
+    <li><a href="#">Home</a></li>
+    <li class="divider">/</li>
+    <li><a href="#" class="active">Prediction</a></li>
+</ul>
+<h1 id="useer" style="display: none;">{{session['user']}}</h1>
+<!-- <h1 id="speice_list" style="display: none;">{{session['species_list']}}</h1> -->
+<h1 id="farms_list" style="display: none;">{{session['farm_keys']}}</h1>
+<h1 id="role" style="display: none;">{{session['role']}}</h1>
+<h1 id="my_farms" style="display: none;">{{session['farm']}}</h1>
+<button id="pdf" class="btn-send"
+    style="width: 180px;height: 55px;visibility: hidden;margin-right: 10px;margin-top: 10px;"
+    onclick="createPDF( )">Generate PDF</button>
+<button id="csv" class="btn-send" style="width: 180px;height: 55px;visibility: hidden;margin-top: 10px;"
+    onclick="htmlToCSV()">Create CSV</button>
+<center id="cen">
+    <br>
+    <span style="display: inline-block ">
+        <div class="dropdown_">
+            <div class="select_" style="width:400px;">
+                <span name="" id="title_farm" class="selected_">--Select Farm/Orchid--</span>
+                <div class="caret_"></div>
+            </div>
+            <ul id="farms_ul" class="menu_" style="left: 35%; width: 400px;height:200px;overflow-y: scroll;transform: none; scrollbar-color:  rgba(255,237,89,1)  #f1f0f6;
+        scrollbar-width: thin;  text-align: left;">
+
+            </ul>
+        </div>
+    </span><br><br>
+    <span style="display: inline-block ">
+        <div class="dropdown_" style="margin-bottom: 10px;">
+            <div class="select_" style="width:400px;">
+                <span id="titling" class="selected_">--Select Specie--</span>
+                <div class="caret_"></div>
+            </div>
+            <ul id="spe" class="menu_" style="left: 35%; width: 400px;height:200px;overflow-y: scroll;transform: none; scrollbar-color:  rgba(255,237,89,1)  #f1f0f6;
+                        scrollbar-width: thin;  text-align: left;">
+                <li>Almaas</li>
+                <li>Alphonso</li>
+                <li>Anmol</li>
+                <li>AnwarRataul</li>
+                <li>BaganPali</li>
+                <li>Chaunsa</li>
+                <li>ChokAnan</li>
+                <li>Collector</li>
+                <li>Dusehri</li>
+                <li>DesiAdaPamato</li>
+                <li>DesiBadam</li>
+                <li>DesiGola</li>
+                <li>DesiBadshah</li>
+                <li>Dilkash</li>
+                <li>Fajri</li>
+                <li>GulabJanhu</li>
+                <li>GulabKhas</li>
+                <li>Lahoti</li>
+                <li>LalBadshah</li>
+                <li>Langra</li>
+                <li>Malda</li>
+                <li>MuhammadWole</li>
+                <li>NawabPuri</li>
+                <li>Neelum</li>
+                <li>RaniPhool</li>
+                <li>Sindhri</li>
+                <li>Saroli</li>
+                <li>Sawarnarika</li>
+                <li>SalehBhai</li>
+                <li>Saib</li>
+                <li>Shan-e-Khuda</li>
+                <li>Taimuria</li>
+                <li>Toofan</li>
+                <li>Wanghi</li>
+                <li>Zafran</li>
+
+            </ul>
+        </div>
+    </span>
+    <div class="card" style="justify-content: center;  align-items: center;  width: 400px;   height: auto; padding: 15px;
+                box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+                border-radius: 5px;
+                overflow: hidden;
+                background: #fafbff;">
+        <div class="top">
+            <p>Upload Images of Mango Leaves</p>
+            <button id="upload_file" type="submit">Upload</button>
+        </div>
+        <div class="drag-area">
+            <span class="visible">
+                Drag & Drop Image here or
+                <span class="select" role="button">Browse</span>
+            </span>
+            <span class="on-drop">Drop images here</span>
+            <input id="filee" name="files[]" type="file" class="file" multiple />
+
+        </div>
+
+        <!-- IMAGE PREVIEW CONTAINER  -->
+        <div class="container"></div>
+
+    </div>
+</center>
+<br><br>
+<div id="table-main" class="container-fluid" style="visibility: hidden;">
+
+
+    <div class="row">
+        <!-- Your Profile Views Chart -->
+        <div class="col-lg-12 m-b30">
+            <div class="widget-box">
+
+
+
+
+                <div class="card shadow mb-4">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr class="text-center">
+                                        <th style="color: black;">No.</th>
+                                        <th style="color: black;">Image Name</th>
+                                        <th style="color: black;">Disease Found</th>
+                                        <th style="color: black;">Predicted Disease</th>
+                                        <th style="color: black;">Predicted Percentage</th>
+                                        <th style="color: black;">Cure</th>
+
+                                    </tr>
+                                </thead>
+
+                                <tbody id="tabledata">
+
+
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- Your Profile Views Chart END-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</main>
+</section>
+<script>
+    var farmsText = jQuery_3_6_1('#my_farms').text(); // Get the text of the h1 element
+    var farmsList = farmsText.split('@'); // Split the text with the @ character
+
+    // var farms_name_list = []
+    // Loop through the farms list and split each farm with the _ character
+    for (var i = 0; i < farmsList.length; i++) {
+        var farm = farmsList[i];
+        var farmParts = farm.split('_');
+        // console.log(farmParts); 
+        jQuery_3_6_1('#farms_ul').append(`<li name=${farmParts[0]}> ${farmParts[1]}</li>`);
+        // farms_name_list.push(farmParts[1])// Display the farm parts in the console
+    };
+    jQuery_3_6_1('#farms_ul li').each(function() {
+        jQuery_3_6_1(this).click(function() {
+      var itemText = jQuery_3_6_1(this).attr('name') ;
+      jQuery_3_6_1('#title_farm').attr('name',itemText);
+    });});
+</script>
+<!-- <input id="filee" type="file" name="files[]" multiple="multiple">
+        <input id="upload_file" type="submit" value="upload_image"> -->
+<!-- </form> -->
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+<script src="{{ url_for('static', filename='js/upload-image.js') }}"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script> -->
+<script>
+
+    function htmlToCSV(html, filename) {
+        M.Toast.dismissAll();
+        M.toast({ html: `Please Wait!!`, classes: 'green rounded' });
+        var data = [];
+        var get_rows = document.querySelectorAll("table tr");
+
+        for (var i = 0; i < get_rows.length; i++) {
+            var rows = [];
+            var cols = get_rows[i].querySelectorAll("td, th");
+
+            for (var j = 0; j < cols.length; j++) {
+                rows.push(cols[j].innerText);
+            }
+
+            data.push(rows.join(","));
+        }
+
+        downloadCSVFile(data.join("\n"), filename);
+    }
+    function downloadCSVFile(csv, filename) {
+        var csv_file, download_link;
+
+        csv_file = new Blob([csv], { type: "text/csv" });
+
+        download_link = document.createElement("a");
+
+        download_link.download = jQuery_3_6_1("#reports_name").text() + " CSV Report";
+
+        download_link.href = window.URL.createObjectURL(csv_file);
+
+        download_link.style.display = "none";
+
+        document.body.appendChild(download_link);
+
+        download_link.click();
+    }
+    function createPDF(name) {
+        M.Toast.dismissAll();
+        M.toast({ html: `Please Wait!!`, classes: 'green rounded' });
+        var doc = new jsPDF('p', 'pt', 'letter');
+        var htmlstring = '';
+        var tempVarToCheckPageHeight = 0;
+        var pageHeight = 0;
+        pageHeight = doc.internal.pageSize.height;
+        specialElementHandlers = {
+            // element with id of "bypass" - jQuery style selector  
+            '#bypassme': function (element, renderer) {
+                // true = "handled elsewhere, bypass text extraction"  
+                return true
+            }
+        };
+        margins = {
+            top: 150,
+            bottom: 60,
+            left: 40,
+            right: 40,
+            width: 50
+        };
+        var y = 20;
+        doc.setLineWidth(2);
+        doc.text(200, y = y + 70, "List of All Students");
+        doc.autoTable({
+            html: '#dataTable',
+            startY: 70,
+            theme: 'grid',
+            columnStyles: {
+                //0: {
+                //    cellWidth: 45,
+                //},
+                //1: {
+                //    cellWidth: 45,
+                //},
+                //2: {
+                //    cellWidth: 45,
+                //},
+                //3: {
+                //    cellWidth: 45,
+                ////}
+            },
+            styles: {
+                minCellHeight: 40
+            }
+        })
+        doc.save(" PDF Report");
+    }
+    // document.getElementById("usename").innerHTML = localStorage.getItem("username")
+    
+</script>
+{% endblock %}

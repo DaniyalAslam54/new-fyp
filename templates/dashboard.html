@@ -1,0 +1,414 @@
+{% extends 'base1.html' %}
+{% block css_links %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/modal-style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/new_modal.css') }}">
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<style>
+    .menu_::-webkit-scrollbar {
+        width: 7px;
+    }
+
+    /* Track */
+    .menu_::-webkit-scrollbar-track {
+        border-radius: 100vh;
+        background: #323741;
+    }
+
+    .menu_::-webkit-scrollbar-thumb {
+        background: linear-gradient(90deg, rgba(255, 237, 89, 1) 20%, rgba(120, 236, 108, 1) 86%);
+        border-radius: 15px;
+        width: thin;
+    }
+</style>
+{% endblock %}
+
+<body>
+
+    {% block body_block %}
+
+    <h1 class="title">Dashboard</h1>
+    <h1 id="useer" style="display: none;">{{session['user']}}</h1>
+    <!-- <h1 id="speice_list" style="display: none;">{{session['species_list']}}</h1> -->
+    <h1 id="farms_list" style="display: none;">{{session['farm_keys']}}</h1>
+    <h1 id="role" style="display: none;">{{session['role']}}</h1>
+    <h1 id="my_farms" style="display: none;">{{session['farm']}}</h1>
+    <ul class="breadcrumbs">
+        <li><a href="#">Home</a></li>
+        <li class="divider">/</li>
+        <li><a href="#" class="active">Dashboard</a></li>
+    </ul>
+
+    <br>
+    <div id="first_box">
+        <span style="display: inline-block ">
+            <div class="dropdown_">
+                <div class="select_">
+                    <span id="title_farm" class="selected_">--Select Farm/Orchid--</span>
+                    <div class="caret_"></div>
+                </div>
+                <ul id="farms_ul" class="menu_" style="left: 3%;width:230px;height:200px;overflow-y: scroll;transform: none; scrollbar-color:  rgba(255,237,89,1)  #f1f0f6;
+            scrollbar-width: thin;  text-align: left;">
+
+                </ul>
+            </div>
+        </span>
+
+        <span> <button id="farm_button"
+                style=" display: inline;margin-bottom: 6px;width: 50px;height: 50px;background: linear-gradient(90deg, rgba(255,237,89,1) 20%, rgba(120,236,108,1) 86%);font-size: 16px !important"
+                class="w3-button w3-circle w3-black" onclick="jQuery_3_6_1('#farm_form').toggleClass('show')">+</button>
+        </span>
+        <h2 style="font-weight: 550;" id="overview_heading"></h2>
+    </div>
+
+    <div id="farm_form" class="containss">
+        <div class="fas fa-times" id="close-first"></div>
+        <header>Lets Get Started</header>
+
+        <div class="progress-bar">
+            <div class="step">
+                <p>Key</p>
+                <div class="bullet">
+                    <span>1</span>
+                </div>
+                <div class="check fas fa-check"></div>
+            </div>
+            <div class="step">
+                <p>Farm</p>
+                <div class="bullet">
+                    <span>2</span>
+                </div>
+                <div class="check fas fa-check"></div>
+            </div>
+            <div class="step">
+                <p>Specie</p>
+                <div class="bullet">
+                    <span>3</span>
+                </div>
+                <div class="check fas fa-check"></div>
+            </div>
+            <div class="step">
+                <p>Submit</p>
+                <div class="bullet">
+                    <span>4</span>
+                </div>
+                <div class="check fas fa-check"></div>
+            </div>
+        </div>
+        <div class="form-outer">
+            <form id="first_form">
+                <div class="page slide-page">
+                    <br>
+                    <div class="field" style="margin-bottom: 20px !important;">
+
+                        <div class="label">Enter Farm Key:</div>
+
+                        <input id="farm_key" type="text">
+                    </div>
+                    <div class="label" style="text-align: center !important;width:100% ;color: #707070;">--or--
+                    </div>
+
+
+                    <div class="field" style="margin-top: 20px  !important;">
+                        <input type="checkbox" id="new_key_check" style="width:25px !important">
+                        <p style="margin-top: 6px;">Generate a new key for my farm/ Orchid/ Garden</p>
+                    </div>
+
+                    <div class="field">
+                        <button id="first_button" class="firstNext but next">Next</button>
+                    </div>
+                </div>
+
+                <div class="page">
+                    <!-- <div class="title">Farm Info.</div> -->
+                    <div class="field">
+                        <div class="label">Farm Name:</div>
+                        <input id="farm_name" type="text">
+                    </div>
+                    <div class="field">
+                        <div class="label">Farm Location:</div>
+                        <input id="farm_adddress" type="text" placeholder="Address">
+
+
+                    </div>
+                    <div class="field">
+                        <div class="label">Province:</div>
+
+                        <select name="province" id="province">
+                            <option value="">Select Province</option>
+                            <option value="punjab">Punjab</option>
+                            <option value="sindh">Sindh</option>
+                            <option value="kpk">Khyber Pakhtunkhwa</option>
+                            <option value="balochistan">Balochistan</option>
+                            <option value="gilgit-baltistan">Gilgit-Baltistan</option>
+                            <option value="ajk">Azad Jammu and Kashmir</option>
+                            <option value="islamabad">Islamabad Capital Territory</option>
+                        </select>
+
+                    </div>
+                    <div class="field btns" style="margin-bottom: 0px;">
+                        <button class="prev-1 but prev">Previous</button>
+                        <button class="next-1 but next">Next</button>
+                    </div>
+                </div>
+
+                <div class="page">
+                    <!-- <div class="title">Date of Birth:</div> -->
+                    <div class="field" style="margin-top: 60px; margin-bottom: 60px;">
+                        <div class="label">Select Specie:</div>
+                        <div class="dropdown_" style="width:100%">
+                            <div class="select_" style="width: 100%;">
+                                <span name="specie_selected_name" id="selected_specie" class="selected_">--Select
+                                    Specie--</span>
+                                <div class="caret_"></div>
+                            </div>
+                            <ul class="menu_" style="width:300px;height:200px;overflow-y: scroll;transform: none; scrollbar-color:  rgba(255,237,89,1)  #f1f0f6;
+                      scrollbar-width: thin;  text-align: left;">
+                                <li>Almaas</li>
+                                <li>Alphonso</li>
+                                <li>Anmol</li>
+                                <li>AnwarRataul</li>
+                                <li>BaganPali</li>
+                                <li>Chaunsa</li>
+                                <li>ChokAnan</li>
+                                <li>Collector</li>
+                                <li>Dusehri</li>
+                                <li>DesiAdaPamato</li>
+                                <li>DesiBadam</li>
+                                <li>DesiGola</li>
+                                <li>DesiBadshah</li>
+                                <li>Dilkash</li>
+                                <li>Fajri</li>
+                                <li>GulabJanhu</li>
+                                <li>GulabKhas</li>
+                                <li>Lahoti</li>
+                                <li>LalBadshah</li>
+                                <li>Langra</li>
+                                <li>Malda</li>
+                                <li>MuhammadWole</li>
+                                <li>NawabPuri</li>
+                                <li>Neelum</li>
+                                <li>RaniPhool</li>
+                                <li>Sindhri</li>
+                                <li>Saroli</li>
+                                <li>Sawarnarika</li>
+                                <li>SalehBhai</li>
+                                <li>Saib</li>
+                                <li>Shan-e-Khuda</li>
+                                <li>Taimuria</li>
+                                <li>Toofan</li>
+                                <li>Wanghi</li>
+                                <li>Zafran</li>
+
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="field btns">
+                        <button class="prev-2 but prev">Previous</button>
+                        <button class="next-2 but next">Next</button>
+                    </div>
+                </div>
+
+                <div class="page">
+                    <!-- <div class="title">Lets Details:</div> -->
+                    <img style="margin-top: -60px;" src="{{ url_for('static', filename='img/mango.gif') }}" alt=""
+                        width="300px" height="300px">
+
+                    <div class="field btns" style="margin-bottom: 0px !important;">
+                        <button class="prev-3 but prev">Previous</button>
+                        <button class="submit but">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="info-data1" class="info-data">
+        <div class="card">
+            <div class="head">
+                <div>
+                    <h3>Farm Name:</h3>
+
+                    <h2 id="farm_n" style="font-weight: 600;padding-top: 3px;"></h2>
+                </div>
+                <i class='bx bx-trending-up icon'></i>
+            </div>
+            <!-- <span class="progress" data-value="40%"></span>
+            <span class="label">40%</span> -->
+        </div>
+        <div class="card">
+            <div class="head">
+                <div>
+                    <h3>Farm Location:</h3>
+                    <h2 id="farm_l" style="font-weight: 600;padding-top: 3px;"></h2>
+                </div>
+                <i class='bx bx-trending-up icon'></i>
+            </div>
+
+        </div>
+        <div class="card">
+            <div class="head">
+                <div>
+                    <h3>Province:</h3>
+                    <h2 id="farm_p" style="font-weight: 600;padding-top: 3px;"></h2>
+                </div>
+                <i class='bx bx-trending-up icon'></i>
+            </div>
+
+        </div>
+        <div class="card">
+            <div class="head">
+                <div>
+                    <h3 id="worker_admin">Workers:</h3>
+                    <h2 id="farm_w" style="font-weight: 600;padding-top: 3px;"></h2>
+                </div>
+                <i class='bx bx-trending-up icon'></i>
+            </div>
+
+        </div>
+    </div>
+    <div id="graphs-box">
+
+        <div class="data">
+            <div class="content-data">
+
+                <div class="chart">
+                    <p>Chart According to Diseases</p>
+                    <div id="chart4"></div>
+                    <br><br><br><br>
+                    <button type="submit" style="justify-content: right; height: 50px !important;font-size: 14px;"
+                        class="btn-send">Get Details <i class='bx bxs-send'></i></button>
+
+                </div>
+            </div>
+            <div class="content-data">
+                <div class="chart">
+                    <p>Detail of Provided Images</p>
+
+                    <div id="chart2"></div>
+                    <button type="submit" style="justify-content: right; height: 50px !important;font-size: 14px;"
+                        class="btn-send">Get Details <i class='bx bxs-send'></i></button>
+
+
+                </div>
+
+            </div>
+        </div>
+        <br>
+    </div>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+
+    <script>
+        jQuery_3_6_1('#close-first').click(function (e) {
+            e.preventDefault();
+            jQuery_3_6_1('#farm_form').toggleClass("show");
+
+        });
+        jQuery_3_6_1('#close-second').click(function (e) {
+            e.preventDefault();
+            jQuery_3_6_1('#sec-form').toggleClass("show-modal");
+        });
+    </script>
+    <script>
+
+        if (jQuery_3_6_1('#role').text().trim() === '') {
+            jQuery_3_6_1("#first_box").css("display", "none");
+            jQuery_3_6_1("#second_box").css("display", "none");
+            jQuery_3_6_1('#farm_form').toggleClass("show");
+        }
+        jQuery_3_6_1('#first_form').submit(function (e) {
+            e.preventDefault();
+            var farm_key_val = jQuery_3_6_1('#farm_key').val();
+            var farm_name_val = jQuery_3_6_1('#farm_name').val();
+            var farm_address_val = jQuery_3_6_1('#farm_adddress').val();
+            var province_val = jQuery_3_6_1('#province').val();
+            var selected_specie_val = jQuery_3_6_1('#selected_specie').text();
+            var checkboxValue = jQuery_3_6_1('#new_key_check').is(':checked');
+            // alert(checkboxValue);
+            jQuery_3_6_1.ajax({
+                url: '/api/submit_form',
+                method: 'POST',
+                data: { farm_key: farm_key_val, checkbox: checkboxValue, farm_name: farm_name_val, farm_address: farm_address_val, province: province_val, specie: selected_specie_val, },
+                success: function (response) {
+                    M.toast({ html: `${response}`, classes: 'green rounded' });
+                    // alert('Form submitted successfully!');
+                    setTimeout(function () {
+                        location.reload();
+                    }, 2000);
+                },
+                error: function (xhr, status, error) {
+                    alert('Error submitting form: ' + error);
+                }
+            });
+
+        })
+        if (jQuery_3_6_1('#role').text().trim() === 'worker') {
+            jQuery_3_6_1('#farm_button').hide();
+        }
+
+        var farmsText = jQuery_3_6_1('#my_farms').text(); // Get the text of the h1 element
+        var farmsList = farmsText.split('@'); // Split the text with the @ character
+
+        // var farms_name_list = []
+        // Loop through the farms list and split each farm with the _ character
+        for (var i = 0; i < farmsList.length; i++) {
+            var farm = farmsList[i];
+            var farmParts = farm.split('_');
+            // console.log(farmParts); 
+            jQuery_3_6_1('#farms_ul').append(`<li name=${farmParts[0]}> ${farmParts[1]}</li>`);
+            // farms_name_list.push(farmParts[1])// Display the farm parts in the console
+        }
+        // console.log(farms_name_list)
+        jQuery_3_6_1('#farms_ul li').each(function () {
+            jQuery_3_6_1(this).click(function () {
+                var itemText = jQuery_3_6_1(this).text();
+                var farm_name = jQuery_3_6_1(this).text();
+                jQuery_3_6_1('#overview_heading').text(`Overview of ${itemText}`);
+
+                jQuery_3_6_1.ajax({
+                    "Content-Type": "application/json",
+                    type: 'POST',
+                    url: '/get_farm',
+                    data: { "key": jQuery_3_6_1(this).attr('name') },
+                    success: function (response) {
+
+                        var responseObject = JSON.parse(JSON.stringify(response));
+
+                        // Access the data in the response object using dot notation
+                        var name = responseObject.name;
+                        var provicne = responseObject.province;
+                        var location = responseObject.location;
+                        var admin = responseObject.admin;
+                        var workers = responseObject.workers;
+                        workers = workers.replace(/_/g, ", ");
+
+                        jQuery_3_6_1("#farm_n").text(name);
+                        jQuery_3_6_1("#farm_l").text(location);
+                        jQuery_3_6_1("#farm_p").text(provicne);
+                        if (jQuery_3_6_1('#role').text().trim() === 'worker') {
+                            jQuery_3_6_1("#worker_admin").text("Admin");
+                            jQuery_3_6_1("#farm_w").text(admin);
+
+                        }
+                        else {
+                            jQuery_3_6_1("#farm_w").text(workers);
+                        }
+
+
+                        console.log('Server response:', response);
+                    },
+                    error: function (error) {
+                        console.log('Ajax error:', error);
+                    }
+                });
+            });
+        });
+        
+    </script>
+    {% endblock %}
+
+
+
+</body>
+
+</html>

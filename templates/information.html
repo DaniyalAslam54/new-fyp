@@ -1,0 +1,209 @@
+
+    {% extends 'base1.html' %}
+{% block css_links %}
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/cards.css') }}">
+   {% endblock %}
+
+
+<body>
+    <!--Logout Modal-->
+
+    {% block body_block %}
+    <h1 id="role" style="display: none;">{{session['role']}}</h1>
+    <h1 class="title">About Diseases</h1>
+    <ul class="breadcrumbs">
+        <li><a href="#">Home</a></li>
+        <li class="divider">/</li>
+        <li><a href="#" class="active">About Diseases</a></li>
+    </ul>
+    <br>
+    <br>
+    <h1 class="title" style="text-align: center;">Information About Diseases</h1>
+
+    
+
+
+
+    <!-- <div class="container"> -->
+    <ul class="cards">
+        <li class="card cards__item">
+            <div class="card__frame">
+                <div class="card__picture">
+                    <img src="{{ url_for('static', filename='img/sooty_mold.png') }}" alt="" width="120"
+                        style="transform: rotate(70deg);">
+                </div>
+                <h2 class="card__title">Sooty Mold</h2>
+            </div>
+            <div class="card__overlay"></div>
+            <div class="card__content">
+                <h2>Sooty Mold</h2>
+                <p>Mango sooty mold (Meliola mangiferae) is one of the species of fungi that
+                    grow on honeydew results from interactions among sap-feeding insects such
+                    as soft scale (wax, green and cottony cushion scales), mealybugs, aphids,
+                    whiteflies and treehoppers and non-parasitic fungi.</p>
+            </div>
+        </li>
+        <li class="card cards__item">
+            <div class="card__frame">
+                <div class="card__picture">
+                    <img src="{{ url_for('static', filename='img/anthracnose.png') }}" alt="" width="400px"
+                        style="transform: rotate(30deg);">
+                </div>
+                <h2 class="card__title">Anthracnose</h2>
+            </div>
+            <div class="card__overlay"></div>
+            <div class="card__content">
+                <h2>Anthracnose</h2>
+                <p>Mango Anthracnose is a fungal infection caused by the fungus Colletotrichum
+                    gloeosporioides and is presently recognized as the most destructive field and
+                    post-harvest disease of mango worldwide.
+                </p>
+            </div>
+        </li>
+        <li class="card cards__item">
+            <div class="card__frame">
+                <div class="card__picture">
+                    <img src="{{ url_for('static', filename='img/apoderus_javanicus.png') }}" alt=""
+                        width="220">
+                </div>
+                <h2 class="card__title">Apoderus Javanicus</h2>
+            </div>
+            <div class="card__overlay"></div>
+            <div class="card__content">
+                <h2>Apoderus Javanicus</h2>
+                <p>
+                    The Apoderus Javanicus, also known as the mango seed beetle, can cause
+                    damage to mango trees by feeding on the fruit and seeds of the tree, which
+                    can lead to reduced yield and fruit quality. The beetles can also damage the
+                    tree's leaves and bark.
+                </p>
+            </div>
+        </li>
+        <li class="card cards__item">
+            <div class="card__frame">
+                <div class="card__picture">
+                    <img src="{{ url_for('static', filename='img/Bacterial_canker.png') }}" alt="" width="70"
+                        style="transform: rotate(40deg);">
+                </div>
+                <h2 class="card__title">Bacterial <br>Canker</h2>
+            </div>
+            <div class="card__overlay"></div>
+            <div class="card__content">
+                <h2>Bacterial Canker</h2>
+                <p>Bacterial canker in mango occurs due to Bacterium which causes Angular,
+                    water-soaked spots on leaves which coalesce and turn black; black cankerous
+                    lesions on stems which crack and exude a gummy substance; irregular black
+                    lesions on fruits which extend into the flesh and exude gum; fruits dropping
+                    from plant.</p>
+            </div>
+        </li>
+        <li class="card cards__item">
+            <div class="card__frame">
+                <div class="card__picture">
+                    <img src="{{ url_for('static', filename='img/Gall midge.png') }}" alt="" width="160">
+                </div>
+                <h2 class="card__title">Gall Midge</h2>
+            </div>
+            <div class="card__overlay"></div>
+            <div class="card__content">
+                <h2>Gall Midge</h2>
+                <p>The larvae of the gall midge feed on the shoots and fruit of the tree, causing the
+                    formation of galls or swellings on the tree's branches and fruit. This can lead to
+                    reduced yield and fruit quality, and in severe cases, can cause the death of the tree's
+                    shoots.</p>
+            </div>
+        </li>
+        <li class="card cards__item">
+            <div class="card__frame">
+                <div class="card__picture">
+                    <img src="{{ url_for('static', filename='img/Icerya Seychellarum.png') }}" alt=""
+                        width="200" style="transform: rotate(50deg);">
+                </div>
+                <h2 class="card__title">Icerya<br> Seychellarum</h2>
+            </div>
+            <div class="card__overlay"></div>
+            <div class="card__content">
+                <h2>Icerya Seychellarum</h2>
+                <p>Icerya Seychellarum is a polyphagous phloem-feeding coccid. This insect
+                    feeds on the underside of leaves, The pest injures the shoots, twigs, leaves,
+                    branches, and fruits of mango by sucking plant fluid with the mouthparts,
+                    causing deformation, defoliation.</p>
+            </div>
+        </li>
+        <li class="card cards__item">
+            <div class="card__frame">
+                <div class="card__picture">
+                    <img src="{{ url_for('static', filename='img/Mictis longicornis.png') }}" alt=""
+                        width="220">
+                </div>
+                <h2 class="card__title">Mictis<br> longicornis</h2>
+            </div>
+            <div class="card__overlay"></div>
+            <div class="card__content">
+                <h2>Mictis longicornis</h2>
+                <p>Mictis longicornis, also known as the mango stem borer, is a type of insect
+                    that infests mango trees and can cause significant damage to the tree's stem
+                    and branches..</p>
+            </div>
+        </li>
+        <li class="card cards__item">
+            <div class="card__frame">
+                <div class="card__picture">
+                    <img src="{{ url_for('static', filename='img/Dappula Tertia.png') }}" alt="" width="220"
+                        style="transform: rotate(-40deg);">
+                </div>
+                <h2 class="card__title">Dappula Tertia</h2>
+            </div>
+            <div class="card__overlay"></div>
+            <div class="card__content">
+                <h2>Dappula Tertia</h2>
+                <p>Dappula is a genus of beetles. If a mango tree is infested by Dappula Tertia,
+                    the larvae of the beetles will bore into the wood of the tree, causing damage to
+                    the tree's stem and branches.</p>
+            </div>
+        </li>
+        <li class="card cards__item">
+            <div class="card__frame">
+                <div class="card__picture">
+                    <img src="{{ url_for('static', filename='img/Dialeuropora-Decempuncta.png') }}" alt=""
+                        width="200" style="transform: rotate(-5deg);">
+                </div>
+                <h2 class="card__title">Dialeuropora-Decempuncta</h2>
+            </div>
+            <div class="card__overlay"></div>
+            <div class="card__content">
+                <h2>Dialeuropora Decempuncta</h2>
+                <p>Dialeurodes is a genus of whitefly. They feed on the sap of plants and can
+                    cause yellowing and wilting of the leaves, as well as the production of
+                    honeydew which can lead to the growth of sooty mold.</p>
+            </div>
+        </li>
+        <li class="card cards__item">
+            <div class="card__frame">
+                <div class="card__picture">
+                    <img src="{{ url_for('static', filename='img/Neomelicharia sparsa.png') }}" alt=""
+                        width="250">
+                </div>
+                <h2 class="card__title">Neomelicharia<br> Sparsa</h2>
+            </div>
+            <div class="card__overlay"></div>
+            <div class="card__content">
+                <h2>Neomelicharia Sparsa</h2>
+                <p>Neomelicharia sparsa is a fungal disease that affects mango trees. The
+                    symptoms include small, dark spots on the leaves and fruit, as well as
+                    premature defoliation.</p>
+            </div>
+        </li>
+    </ul>
+
+    {% endblock %}
+    
+
+
+           
+
+
+    
+</body>
+
+</html>

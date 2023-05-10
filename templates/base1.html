@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mango Surveyor</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/logo1.png') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/toastet.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/logout_modal.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/w3.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dropdown_.css') }}">
+
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v3.0.6/css/line.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <script type="text/javascript">
+        var jQuery_3_6_1 = $.noConflict(true);
+    </script>
+    {% block css_links %}
+
+    {% endblock %}
+
+</head>
+
+<body>
+    <!-- SIDEBAR -->
+    <section id="sidebar" class="hide">
+        <a style="padding-top: 10px;" href="#" class="brand"><img
+                src="{{ url_for('static', filename='img/logo-black.png') }}" width="225px" height="55px" alt=""></a>
+        <ul class="side-menu">
+            <li><a id="dash" href="{{ url_for('dashboard') }}" ><i class='bx bxs-dashboard icon'></i> Dashboard</a>
+            </li>
+            <li class="divider" data-text="main">Main</li>
+
+            <li><a id="upd" href="{{ url_for('upload') }}"><i class='bx  bxs-notepad icon'></i> Make Predictions</a></li>
+            <li><a id="hist" href="{{ url_for('history') }}"><i class='bx bx-history icon'></i> History</a></li>
+            <li class="divider" data-text="Information">Information</li>
+            <li><a id="info" href="{{ url_for('information') }}"><i class='bx bxs-notepad icon'></i> About Disease </a></li>
+
+        </ul>
+        <div class="ads">
+            <div class="wrapper">
+
+                <p>A Product of <span>Mango Surveyor</span>. <span>All Rights Reserved</span></p>
+            </div>
+        </div>
+    </section>
+    <!-- SIDEBAR -->
+    <!-- NAVBAR -->
+    <section id="content">
+        <!--Logout Modal-->
+
+
+        <div id="logou" class="popup">
+            <header>
+                <span>Ready to Leave?</span>
+                <div><i id="closing_logout" class="uil uil-times"></i>
+                </div>
+            </header>
+            <div class="content">
+
+                <p>Select "Logout" below if you are ready to end your current session.</p>
+
+                <br>
+                <div class="field">
+                    <button id="cancel_logout">Cancel</button>
+                    <button><a href="{{ url_for('logout') }}">Logout</a> </button>
+                </div>
+            </div>
+        </div>
+        <!--Logout Modal-->
+
+        <!-- NAVBAR -->
+        <nav>
+            <i class='bx bx-menu toggle-sidebar'></i>
+            <form action="#">
+                <!-- <div class="form-group">
+                        <input type="text" placeholder="Search...">
+                        <i class='bx bx-search icon' ></i>
+                    </div>-->
+            </form>
+            <!-- <a href="#" class="nav-link">
+                    <i class='bx bxs-bell icon' ></i>
+                    <span class="badge">5</span>
+                </a> -->
+            <!-- <a href="#" class="nav-link">
+                    <i class='bx bxs-message-square-dots icon' ></i>
+                    <span class="badge">8</span>
+                </a> -->
+            <h4 id="user_role" style="font-size: 15px; font-weight: 600;">
+                Welcome, {{session['username']}}!
+                </h5>
+                <span id="usename" class="divider"></span>
+                <div class="profile">
+
+                    <img src="{{ url_for('static', filename='img/user.png') }}" alt="">
+                    <ul class="profile-link">
+                        <li><a href="#"><i class='bx bxs-user-circle icon'></i> Profile</a></li>
+                        <li id="logout_"><a href="#"><i class='bx bxs-log-out-circle'></i> Logout</a></li>
+                    </ul>
+                </div>
+        </nav>
+        <!-- NAVBAR -->
+
+
+        <!-- MAIN -->
+        <main id="main" >
+            {% block body_block %}
+
+            {% endblock %}
+        </main>
+        <!-- MAIN -->
+    </section>
+    <!-- NAVBAR -->
+
+    <!--Scripts for logout modal-->
+    <script>
+        var ww = window.location.href;
+        ww = ww.split("/");
+         
+        if (ww[3] == "dashboard"){
+          
+            document.getElementById("dash").classList.add("active")
+        }
+        else if (ww[3] == "upload"){
+            document.getElementById("upd").classList.add("active")
+        }
+        else if (ww[3] == "history"){
+            document.getElementById("hist").classList.add("active")
+        }
+        else if (ww[3] == "Information"){
+            document.getElementById("info").classList.add("active")
+        }
+       
+        jQuery_3_6_1('#logout_').click(function (e) {
+            e.preventDefault();
+            jQuery_3_6_1('#logou').toggleClass("show");
+        });
+        jQuery_3_6_1('#closing_logout').click(function (e) {
+            e.preventDefault();
+            jQuery_3_6_1('#logou').toggleClass("show");
+        });
+
+        jQuery_3_6_1('#cancel_logout').click(function (e) {
+            e.preventDefault();
+            jQuery_3_6_1('#logou').toggleClass("show");
+        });
+    </script>
+    <!--End Scripts for logout modal-->
+    <script>
+        jQuery_3_6_1("#user_role").text(jQuery_3_6_1("#user_role").text() + " (" + jQuery_3_6_1('#role').text().trim() + ")");
+
+        const dropdowns_ = document.querySelectorAll(".dropdown_");
+        dropdowns_.forEach(dropdown => {
+            const selct = dropdown.querySelector(".select_");
+            const caret = dropdown.querySelector(".caret_");
+            const menu = dropdown.querySelector(".menu_");
+            const options = dropdown.querySelectorAll(".menu_ li");
+            const selected = dropdown.querySelector(".selected_")
+
+
+            selct.addEventListener("click", () => {
+                selct.classList.toggle("select-clicked");
+                caret.classList.toggle("caret_rotate");
+                menu.classList.toggle("menu-open");
+            });
+
+            options.forEach(option => {
+                option.addEventListener("click", () => {
+                    selected.innerText = option.innerText;
+                    selected.classList.remove("select-clicked");
+                    caret.classList.remove("caret_rotate");
+                    menu.classList.remove("menu-open");
+                    options.forEach(option => {
+                        option.classList.remove("active_");
+
+                    });
+                    option.classList.add("active_")
+                })
+            })
+
+
+        })
+        
+    </script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+
+</html>
