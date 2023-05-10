@@ -4,6 +4,7 @@ COPY . /app
 RUN pip install --upgrade pip
 RUN pip install requests
 RUN pip install Flask
+RUN pip install gunicorn
 RUN pip install numpy
 RUN pip install opencv-python-headless
 RUN pip install  Pyrebase4
