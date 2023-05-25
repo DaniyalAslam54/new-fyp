@@ -241,4 +241,4 @@ def reports_get():
     return report_lst
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0",debug=True,port=int("4000"))
+    app.run()
