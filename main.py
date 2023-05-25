@@ -25,6 +25,7 @@ conss = {
     }
 
 
+
 firebase_ = pyrebase.initialize_app(conss)
 auth = firebase_.auth()
 database =firebase_.database()
